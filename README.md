@@ -8,8 +8,9 @@ Un fichier csv quand la durée d'execution dépassera la durée maximal.
 
 ### the story of the code
 
-Mon nouveau pc de l'école a perdu de ouf en autonomie. Je pense que c'est du au fait que je l'utilise comme si c'était un pc : h24 chargé.
-Pourquoi j'ai fait ça ? Jsp j'aime bien les graphiques.
+Mon nouveau pc de l'école a perdu de ouf en autonomie. Je sais déjà que c'est dûe au fait que je l'utilise comme si c'était un pc fixe, h24 branché au secteur, alors que je sais très bien que ça bz la batterie.
+
+Pourquoi j'ai fait ça ? Jsais mm pas, j'aime bien les graphiques.
 
 ### 📸 Screenshots 
 
