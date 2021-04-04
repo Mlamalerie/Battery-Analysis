@@ -10,6 +10,10 @@ import pandas as pd
 import os
 import psutil
 
+
+
+
+
 def returnTime():
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 def returnNameTime(time):
@@ -60,39 +64,66 @@ def Run(dureeMax,delaySec,n=2000):
             time.sleep(delaySec*60)
     except:
         data = pd.DataFrame(data={'t' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
-        return data, tabTime[0],tabTime[-1]
+        return data, tabTime[0],tabTime[-1],distance
     else:
         data = pd.DataFrame(data={'t' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
-        return data,tabTime[0],tabTime[-1]
+        return data,tabTime[0],tabTime[-1],distance
 
 def recupVar(nomFich):
-    with open(nomFich,"r",encoding="utf-8") as f:
-        text = f.read().strip()
-        var = []
-        for tex in text.split("\n"):
-            var.append([t.strip() for t in tex.split("#")][0][1:-1].strip())
-         
-        res = {}
-        for v in var:
-            res[v.split(":")[0].strip()[1:-1]] = int(v.split(":")[1].strip())
-         
-        return res['dureeMax'],res['delay']
+    try:
+        with open(nomFich,"r",encoding="utf-8") as f:
+            text = f.read().strip()
+            #q = input("???***")
+            var = []
+            for tex in text.split("\n"):
+                var.append([t.strip() for t in tex.split("#")][0][1:-1].strip())
+            #q = input("???****")
+            res = {}
+            for v in var:
+                res[v.split(":")[0].strip()[1:-1]] = v.split(":")[1].strip()
+                
+          
+            #q = input("???")
+            return int(res['dureeMax']),int(res['delay'])
+    except Exception as e:
+        print(e)
+        print("erreur dans la recupérations des variables..." )
+        input()
 
 def main():
-    dureeMax,delay = recupVar('var.txt')
+    nomEmplacementSauvegarde = "G:\\Mon Drive\\Zone de Code Python\\• Mes logiciels Hack\\• Battery Stat\\"
+    dureeMax,delay = recupVar( nomEmplacementSauvegarde+'var.txt')
     #nbPoint = int(input(" # NB DE POINT : "))
     #dureeMax = int(input(" # DUREE MAX (HOUR) : "))
     #delay =  int(input(" # DELAY (MIN) : "))
     print(f"# DUREE MAX (HOUR) : {dureeMax} ")
     print(f"# DELAY (MIN) :  {delay} ")
-    df,a,b = Run(dureeMax,delay)
+    try:
+        df,a,b,tempsExc = Run(dureeMax,delay)
+    except Exception as e:
+        print(e)
+        print("L'execution a eu un pb... " )
+        input()
+        
     
-    nomEmplacementSauvegarde = "backups"
+    nomEmplacementSauvegarde += "backups"
     if not os.path.exists(nomEmplacementSauvegarde):
     	os.makedirs(nomEmplacementSauvegarde)
 
-    
-    #df.to_csv (r'backups/export_battery (' +dureeMax + ') ['+returnNameTime(a)+"+"+returnNameTime(b)+ '].csv', index = False, header=True)
-
+    try:
+        df.to_csv (r'backups/export_battery (' + str(tempsExc) + ') ['+returnNameTime(a)+"+"+returnNameTime(b)+ '].csv', index = False, header=True)
+    except Exception as e:
+        print(e)
+        print("la création du fichier csv a eu un pb... " )
+        input()
+   
+        
 if __name__ == "__main__":
-   main()
+    try:
+        main()
+    except Exception as e:
+        print(e)
+        print("le programme n'a pas bien marché... " )
+        input()
+    
+
