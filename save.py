@@ -29,7 +29,7 @@ def returnBattery(now):
     percent = str(battery.percent)
     plugged = ("Plugged In",1) if plugged else ("Not Plugged In",0)
   
-    print(percent+'% | '+plugged[0]+' | '+now)
+    print(percent+'% | '+plugged[0]+' | '+now,end=' | ')
     return int(percent),plugged[1]
 
 def DiffTime(a,b):
@@ -40,7 +40,7 @@ def DiffTime(a,b):
     total_seconds = time_delta.total_seconds()
     minutes = total_seconds/60
     heures = minutes/60
-    return int(heures) #○return en heure
+    return int(heures),int(minutes) #○return en heure
 
 
 def Run(dureeMax,delaySec,n=2000):
@@ -58,16 +58,15 @@ def Run(dureeMax,delaySec,n=2000):
             tabPourcentage.append( b[0] )
             tabBoolPlug.append( b[1] )
             i += 1
-            distance = DiffTime(tabTime[0],tabTime[-1])
-            if i % 100 == 0:
-                print(f"ça fait plus de {(distance)} heures que le bail tourne..")
+            distanceH, distanceM = DiffTime(tabTime[0],tabTime[-1])
+            print(f"minutes={distanceM}")
             time.sleep(delaySec*60)
     except:
         data = pd.DataFrame(data={'t' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
-        return data, tabTime[0],tabTime[-1],distance
+        return data, tabTime[0],tabTime[-1],distanceH
     else:
         data = pd.DataFrame(data={'t' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
-        return data,tabTime[0],tabTime[-1],distance
+        return data,tabTime[0],tabTime[-1],distanceH
 
 def recupVar(nomFich):
     try:
