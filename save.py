@@ -39,8 +39,8 @@ def DiffTime(a,b):
     return int(heures) #○return en heure
 
 
-print(DiffTime("2021-04-04 18:15:13","2021-04-04 19:55:13"))
-def Run(n,dureeMax,delaySec):
+def Run(dureeMax,delaySec,n=2000):
+    print()
     tabTime = []
     tabPourcentage = []
     tabBoolPlug = []
@@ -48,12 +48,15 @@ def Run(n,dureeMax,delaySec):
     i = 0
     try:
         while i < n and distance < dureeMax:
+            
             tabTime.append( returnTime())
             b = returnBattery(tabTime[-1])
             tabPourcentage.append( b[0] )
             tabBoolPlug.append( b[1] )
             i += 1
             distance = DiffTime(tabTime[0],tabTime[-1])
+            if i % 100 == 0:
+                print(f"ça fait plus de {(distance)} heures que le bail tourne..")
             time.sleep(delaySec*60)
     except:
         data = pd.DataFrame(data={'t' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
@@ -63,11 +66,11 @@ def Run(n,dureeMax,delaySec):
         return data,tabTime[0],tabTime[-1]
 
 def main():
-    #n = int(input(" # NB DE POINT : "))
-    #duree = int(input(" #  DUREE MAX (HOUR) : "))
-    #delayMin =  int(input(" # DELAY (MIN) : "))
+    #nbPoint = int(input(" # NB DE POINT : "))
+    duree = int(input(" # DUREE MAX (HOUR) : "))
+    delayMin =  int(input(" # DELAY (MIN) : "))
    
-    df,a,b = Run(10,1,0.2)
+    df,a,b = Run(duree,0.5)
     
     nomEmplacementSauvegarde = "backups"
     if not os.path.exists(nomEmplacementSauvegarde):
