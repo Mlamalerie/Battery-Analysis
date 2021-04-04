@@ -10,7 +10,7 @@ Un fichier csv sera créée quand la durée d'execution dépassera la durée max
 
 Mon nouveau pc a perdu de ouf en autonomie de batterie. Je sais déjà que c'est dû au fait que je l'utilise comme si c'était un pc fixe, h24 branché au secteur, alors que je sais très bien que ça bz la batterie.
 
-Pourquoi j'ai fait ça ? Jsais mm pas, j'aime bien les graphiques.
+Pourquoi j'ai fait ça ? Jsais mm pas, j'aime bien les graphiques je crois.
 
 ### 📸 Screenshots 
 
