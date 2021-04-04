@@ -1,0 +1,2 @@
+{'dureeMax': 6} # durée (en heure) maximum d'execution
+{ 'delay' : 1} # delai entre les point (en minute)

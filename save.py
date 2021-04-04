@@ -65,19 +65,34 @@ def Run(dureeMax,delaySec,n=2000):
         data = pd.DataFrame(data={'t' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
         return data,tabTime[0],tabTime[-1]
 
+def recupVar(nomFich):
+    with open(nomFich,"r",encoding="utf-8") as f:
+        text = f.read().strip()
+        var = []
+        for tex in text.split("\n"):
+            var.append([t.strip() for t in tex.split("#")][0][1:-1].strip())
+         
+        res = {}
+        for v in var:
+            res[v.split(":")[0].strip()[1:-1]] = int(v.split(":")[1].strip())
+         
+        return res['dureeMax'],res['delay']
+
 def main():
+    dureeMax,delay = recupVar('var.txt')
     #nbPoint = int(input(" # NB DE POINT : "))
-    duree = int(input(" # DUREE MAX (HOUR) : "))
-    delayMin =  int(input(" # DELAY (MIN) : "))
-   
-    df,a,b = Run(duree,0.5)
+    #dureeMax = int(input(" # DUREE MAX (HOUR) : "))
+    #delay =  int(input(" # DELAY (MIN) : "))
+    print(f"# DUREE MAX (HOUR) : {dureeMax} ")
+    print(f"# DELAY (MIN) :  {delay} ")
+    df,a,b = Run(dureeMax,delay)
     
     nomEmplacementSauvegarde = "backups"
     if not os.path.exists(nomEmplacementSauvegarde):
     	os.makedirs(nomEmplacementSauvegarde)
 
     
-    df.to_csv (r'backups/export_battery ['+returnNameTime(a)+"+"+returnNameTime(b)+ '].csv', index = False, header=True)
+    #df.to_csv (r'backups/export_battery (' +dureeMax + ') ['+returnNameTime(a)+"+"+returnNameTime(b)+ '].csv', index = False, header=True)
 
 if __name__ == "__main__":
    main()

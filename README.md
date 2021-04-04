@@ -4,7 +4,7 @@ Programme qui enregistre les informations de la batterie.
 ### ⚙ How to run it
 
 Run save.py file pour commencer l'enregister. 
-Un fichier csv quand la durée d'execution dépassera la durée maximal (saisie au début du programme).
+Un fichier csv quand la durée d'execution dépassera la durée maximal.
 
 ### the story of the code
 
