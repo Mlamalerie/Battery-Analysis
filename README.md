@@ -2,8 +2,8 @@
 Programme qui enregistre les informations de la batterie.
 
 ### ⚙ How to run it
-Ouvrir var.txt puis rentrer la durée maximal d'execution et le delai entre les points voulus 
-Run save.py file pour commencer l'enregister. 
+Ouvrir var.txt puis rentrer la durée maximal d'execution et le delai entre les points voulus. <br> 
+Run save.py file pour commencer l'enregister. <br> 
 Un fichier csv sera créée quand la durée d'execution dépassera la durée maximal.
 
 ### The story of the code
