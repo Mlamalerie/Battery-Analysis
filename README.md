@@ -14,7 +14,7 @@ Pourquoi j'ai fait ça ? Jsais mm pas, j'aime bien les graphiques.
 
 ### 📸 Screenshots 
 
-<img src="img/img1.png">
+<img src="img/img1.PNG">
 
 
 ---
