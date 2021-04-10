@@ -9,7 +9,7 @@ import time,datetime
 import pandas as pd
 import os
 import psutil
-
+nomEmplacementSauvegarde = "G:\\Mon Drive\\Zone de Code Python\\• Mes logiciels Hack\\• Battery Stat\\"
 
 
 
@@ -41,6 +41,7 @@ def DiffTime(a,b):
     minutes = total_seconds/60
     heures = minutes/60
     return int(heures),int(minutes) #○return en heure
+    
 
 
 def Run(dureeMax,delaySec,n=2000):
@@ -48,25 +49,37 @@ def Run(dureeMax,delaySec,n=2000):
     tabTime = []
     tabPourcentage = []
     tabBoolPlug = []
-    distance = 0
+    distanceH, distanceM = 0,0
     i = 0
     try:
-        while i < n and distance < dureeMax:
-            
+        while i < n and distanceH < dureeMax:
+            Hprec = distanceH # pour voir si lheure change
             tabTime.append( returnTime())
             b = returnBattery(tabTime[-1])
             tabPourcentage.append( b[0] )
             tabBoolPlug.append( b[1] )
             i += 1
             distanceH, distanceM = DiffTime(tabTime[0],tabTime[-1])
-            print(f"minutes={distanceM}")
+            
+            if distanceH != Hprec: # heure a changé
+                Hprec = distanceH
+                print("heure a changé")
+                data = pd.DataFrame(data={'datetime' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
+                SaveCSV(data, tabTime[0],tabTime[-1],distanceM)
+                
+            
+            if(distanceM < 120):            
+                print(f"minutes={distanceM}")
+            else:
+                print(f"heures={distanceH}")
+            #time.sleep(delaySec*60)
             time.sleep(delaySec*60)
     except:
-        data = pd.DataFrame(data={'t' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
-        return data, tabTime[0],tabTime[-1],distanceH
+        data = pd.DataFrame(data={'datetime' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
+        return data, tabTime[0],tabTime[-1],distanceM
     else:
         data = pd.DataFrame(data={'t' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
-        return data,tabTime[0],tabTime[-1],distanceH
+        return data,tabTime[0],tabTime[-1],distanceM
 
 def recupVar(nomFich):
     try:
@@ -89,40 +102,36 @@ def recupVar(nomFich):
         print("erreur dans la recupérations des variables..." )
         input()
 
+def SaveCSV(df,a,b,tempsExc):
+    
+    global nomEmplacementSauvegarde 
+    nomEmplacementSauvegarde += "backups"
+    if not os.path.exists(nomEmplacementSauvegarde):
+    	os.makedirs(nomEmplacementSauvegarde)
+
+    try:
+        df.to_csv(r'backups/export_battery ['+returnNameTime(a)+"+"+returnNameTime(b)+ '] (' + str(tempsExc) + ').csv', index = False, header=True)
+    except Exception as e:
+        print(e)
+        print("la création du fichier csv a eu un pb... " )
+        input()
+    
 def main():
-    nomEmplacementSauvegarde = "G:\\Mon Drive\\Zone de Code Python\\• Mes logiciels Hack\\• Battery Stat\\"
+    
     dureeMax,delay = recupVar( nomEmplacementSauvegarde+'var.txt')
     #nbPoint = int(input(" # NB DE POINT : "))
     #dureeMax = int(input(" # DUREE MAX (HOUR) : "))
     #delay =  int(input(" # DELAY (MIN) : "))
     print(f"# DUREE MAX (HOUR) : {dureeMax} ")
     print(f"# DELAY (MIN) :  {delay} ")
-    try:
-        df,a,b,tempsExc = Run(dureeMax,delay)
-    except Exception as e:
-        print(e)
-        print("L'execution a eu un pb... " )
-        input()
-        
     
-    nomEmplacementSauvegarde += "backups"
-    if not os.path.exists(nomEmplacementSauvegarde):
-    	os.makedirs(nomEmplacementSauvegarde)
-
-    try:
-        df.to_csv (r'backups/export_battery (' + str(tempsExc) + ') ['+returnNameTime(a)+"+"+returnNameTime(b)+ '].csv', index = False, header=True)
-    except Exception as e:
-        print(e)
-        print("la création du fichier csv a eu un pb... " )
-        input()
+    df,a,b,tempsExc = Run(dureeMax,delay)
+    SaveCSV(df,a,b,tempsExc)
+ 
    
         
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print(e)
-        print("le programme n'a pas bien marché... " )
-        input()
-    
+
+    main()
+
 
