@@ -32,3 +32,4 @@ def main():
     print(select,select["memory_percent"].sum())
 if __name__ == '__main__':
    main()
+   input(">")

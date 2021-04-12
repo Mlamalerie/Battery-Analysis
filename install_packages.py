@@ -5,7 +5,7 @@ os.system("python -m pip install --upgrade pip")
 
 commandinstall = "pip install "
 
-listes = ['pandas','psutil','time','datetime','psutil']
+listes = ['pandas','psutil','time','datetime','psutil','plyer']
 
 for mod in listes:
     if mod not in sys.modules:

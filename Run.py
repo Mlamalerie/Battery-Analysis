@@ -1,17 +1,36 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Apr  4 18:17:48 2021
 
-Github: https://www.github.com/Mlamalerie
 
-"""
 import time,datetime
 import pandas as pd
-import os
+import os,sys
 import psutil
-nomEmplacementSauvegarde = "G:\\Mon Drive\\Zone de Code Python\\• Mes logiciels Hack\\• Battery Stat\\"
+
+from plyer import notification
+
+def intro():
+    print('''BATTERRY BACKUPS - Created by Mlamali SAID SALIMO
+    github:- https://github.com/Mlamalerie
+    Email:- nassim.saidsalimo@gmail.com\n''')
+
+def exit(code):
+    print('\nExiting....')
+    print('\nPasse une excellente journée bogosse.')
+    sys.exit(code)
 
 
+#LEDOSSIER = os.getcwd()
+LEDOSSIER = "G:/Mon Drive/Zone de Code Python/• Mes logiciels Hack/• Battery Stat"
+
+
+
+def CreerDossierSauvegarde(ou,doss):
+    nomEmplacementSauvegarde = ou + "/" + doss
+    if not os.path.exists(nomEmplacementSauvegarde):
+        os.mkdir(nomEmplacementSauvegarde)
+        return nomEmplacementSauvegarde
+    else:
+        return nomEmplacementSauvegarde
 
 
 def returnTime():
@@ -45,10 +64,12 @@ def DiffTime(a,b):
 
 
 def Run(dureeMax,delaySec,n=2000):
+    #notify()
     print()
     tabTime = []
     tabPourcentage = []
     tabBoolPlug = []
+    
     distanceH, distanceM = 0,0
     i = 0
     try:
@@ -58,21 +79,26 @@ def Run(dureeMax,delaySec,n=2000):
             b = returnBattery(tabTime[-1])
             tabPourcentage.append( b[0] )
             tabBoolPlug.append( b[1] )
+            
             i += 1
             distanceH, distanceM = DiffTime(tabTime[0],tabTime[-1])
             
             if distanceH != Hprec: # heure a changé
                 Hprec = distanceH
                 print("heure a changé")
-                data = pd.DataFrame(data={'datetime' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
-                SaveCSV(data, tabTime[0],tabTime[-1],distanceM)
+                notify(tabPourcentage[-1],tabBoolPlug[-1])
+            
                 
             
             if(distanceM < 120):            
                 print(f"minutes={distanceM}")
             else:
                 print(f"heures={distanceH}")
-            #time.sleep(delaySec*60)
+                
+            notify(tabPourcentage[-1],tabBoolPlug[-1],True) # notifier si le chargeur est branché
+            
+            data = pd.DataFrame(data={'datetime' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
+            SaveCSV(data, tabTime[0],tabTime[-1],delaySec)
             time.sleep(delaySec*60)
     except:
         data = pd.DataFrame(data={'datetime' : tabTime, '%' : tabPourcentage,'plugged' : tabBoolPlug})
@@ -102,23 +128,32 @@ def recupVar(nomFich):
         print("erreur dans la recupérations des variables..." )
         input()
 
-def SaveCSV(df,a,b,tempsExc):
-    
-    global nomEmplacementSauvegarde 
-    nomEmplacementSauvegarde += "backups"
-    if not os.path.exists(nomEmplacementSauvegarde):
-    	os.makedirs(nomEmplacementSauvegarde)
+def SaveCSV(df,a,b,delai):
 
     try:
-        df.to_csv(r'backups/export_battery ['+returnNameTime(a)+"+"+returnNameTime(b)+ '] (' + str(tempsExc) + ').csv', index = False, header=True)
+        filename = LEDOSSIER + r'/backups/export_battery ['+returnNameTime(a)+'] (' + str(delai) + ').csv'
+        df.to_csv(filename, index = False, header=True,sep =";")
+        print("saved.")
     except Exception as e:
         print(e)
-        print("la création du fichier csv a eu un pb... " )
-        input()
-    
+        print(f"la création du fichier {filename} a eu un pb... " )
+
+
+def notify(p=None,plug=None,OkCTrop = None):
+    image = LEDOSSIER + "/img/icon.ico"
+    if(OkCTrop):
+        if int(p) > 95 and plug == 1:
+             notification.notify(title = "Débranche le chargeur !",message="Eh la batterie ! " +str(p) + "% ..",timeout=10,app_icon=image)
+    elif p or plug:
+        notification.notify(title = "Rappel : Battery Stat en cours d'execution... ",message=str(p) + "% Battery remaining",timeout=10,app_icon=image)
+    else:
+         notification.notify(title = "Battery Stat",message="Go.. !",timeout=10,app_icon=image)
+        
 def main():
-    
-    dureeMax,delay = recupVar( nomEmplacementSauvegarde+'var.txt')
+    intro()
+    dureeMax,delay = recupVar( LEDOSSIER +'/var.txt')
+
+    CreerDossierSauvegarde(LEDOSSIER,"backups")
     #nbPoint = int(input(" # NB DE POINT : "))
     #dureeMax = int(input(" # DUREE MAX (HOUR) : "))
     #delay =  int(input(" # DELAY (MIN) : "))
@@ -126,7 +161,9 @@ def main():
     print(f"# DELAY (MIN) :  {delay} ")
     
     df,a,b,tempsExc = Run(dureeMax,delay)
-    SaveCSV(df,a,b,tempsExc)
+    
+    #SaveCSV(df,a,b,delay)
+    exit(0)
  
    
         
