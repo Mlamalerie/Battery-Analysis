@@ -15,7 +15,7 @@ Pourquoi j'ai fait ça ? Jsais mm pas, j'aime bien les graphiques je crois.
 ### 📸 Screenshots 
 
 <img src="img/img1.PNG" width="300">
-
+<img src="img/img2.PNG" width="400">
 
 ---
 [Mlamali SAID SALIMO](https://www.linkedin.com/in/mlamalisaidsalimo)  <br/>
