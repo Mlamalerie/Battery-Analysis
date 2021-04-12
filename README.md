@@ -4,7 +4,7 @@ Programme qui enregistre les informations de la batterie. De surcroit, le progra
 ### ⚙ How to run it
 Ouvrir var.txt puis rentrer la durée maximal d'execution et le delai entre les points voulus. <br> 
 Executer Run.py pour commencer l'enregistrement. <br> 
-Les points seront enrgistré dans un fichier csv.
+Les points seront enregistrés dans un fichier csv.
 
 
 ### The story of the code
