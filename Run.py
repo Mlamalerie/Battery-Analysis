@@ -28,9 +28,7 @@ def CreerDossierSauvegarde(ou,doss):
     nomEmplacementSauvegarde = ou + "/" + doss
     if not os.path.exists(nomEmplacementSauvegarde):
         os.mkdir(nomEmplacementSauvegarde)
-        return nomEmplacementSauvegarde
-    else:
-        return nomEmplacementSauvegarde
+    return nomEmplacementSauvegarde
 
 
 def returnTime():
@@ -38,8 +36,8 @@ def returnTime():
 def returnNameTime(time):
     aaaa = time.split(" ")[0]
     bbbb = time.split(" ")[1]
-    
-    h = "".join([ x for x in bbbb.split(':')[0:2] ])
+
+    h = "".join(list(bbbb.split(':')[:2]))
     return aaaa + "-" + h
 
 def returnBattery(now):
@@ -47,8 +45,8 @@ def returnBattery(now):
     plugged = battery.power_plugged
     percent = str(battery.percent)
     plugged = ("Plugged In",1) if plugged else ("Not Plugged In",0)
-  
-    print(percent+'% | '+plugged[0]+' | '+now,end=' | ')
+
+    print(f'{percent}% | ' + plugged[0] + ' | ' + now, end=' | ')
     return int(percent),plugged[1]
 
 def DiffTime(a,b):
@@ -111,16 +109,11 @@ def recupVar(nomFich):
     try:
         with open(nomFich,"r",encoding="utf-8") as f:
             text = f.read().strip()
-            #q = input("???***")
-            var = []
-            for tex in text.split("\n"):
-                var.append([t.strip() for t in tex.split("#")][0][1:-1].strip())
-            #q = input("???****")
-            res = {}
-            for v in var:
-                res[v.split(":")[0].strip()[1:-1]] = v.split(":")[1].strip()
-                
-          
+            var = [
+                [t.strip() for t in tex.split("#")][0][1:-1].strip()
+                for tex in text.split("\n")
+            ]
+            res = {v.split(":")[0].strip()[1:-1]: v.split(":")[1].strip() for v in var}
             #q = input("???")
             return int(res['dureeMax']),int(res['delay'])
     except Exception as e:
@@ -141,13 +134,23 @@ def SaveCSV(df,a,b,delai):
 
 def notify(p=None,plug=None,OkCTrop = None):
     image = LEDOSSIER + "/img/icon.ico"
-    if(OkCTrop):
+    if OkCTrop:
         if int(p) > 95 and plug == 1:
-             notification.notify(title = "Débranche le chargeur !",message="Eh la batterie ! " +str(p) + "% ..",timeout=10,app_icon=image)
+            notification.notify(
+                title="Débranche le chargeur !",
+                message=f"Eh la batterie ! {str(p)}% ..",
+                timeout=10,
+                app_icon=image,
+            )
     elif p or plug:
-        notification.notify(title = "Rappel : Battery Stat en cours d'execution... ",message=str(p) + "% Battery remaining",timeout=10,app_icon=image)
+        notification.notify(
+            title="Rappel : Battery Stat en cours d'execution... ",
+            message=f"{str(p)}% Battery remaining",
+            timeout=10,
+            app_icon=image,
+        )
     else:
-         notification.notify(title = "Battery Stat",message="Go.. !",timeout=10,app_icon=image)
+        notification.notify(title = "Battery Stat",message="Go.. !",timeout=10,app_icon=image)
         
 def main():
     intro()

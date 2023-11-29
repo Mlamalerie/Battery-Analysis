@@ -11,4 +11,4 @@ for mod in listes:
     if mod not in sys.modules:
         os.system(commandinstall + mod)
     else:
-        print(mod + " est installe ouiii")
+        print(f"{mod} est installe ouiii")
